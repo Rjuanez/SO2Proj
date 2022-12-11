@@ -82,18 +82,7 @@ ENTRY(clock_handler)
       RESTORE_ALL
       iret;
 
-ENTRY(pf_handler)
-      SAVE_ALL
-      pushl %eax;
-      call user_to_system;
-      popl %eax;
-      EOI
-      call pf_routine;
-      pushl %eax;
-      call system_to_user;
-      popl %eax;
-      RESTORE_ALL
-      iret;
+
 
 ENTRY(keyboard_handler)
       SAVE_ALL

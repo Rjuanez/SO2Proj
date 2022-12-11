@@ -33,21 +33,7 @@ char char_map[] =
 
 int zeos_ticks = 0;
 
-void pf_routine() {
-  char buff[24];
-  printk("Process ");
-  itoa(sys_getpid(),buff);
-  printk(buff);
-  printk(" has generated a SEGFAULT when\n");
-  printk("executing ");
-  itoa(get_eip(),buff);
-  printk(buff);
-  printk(" instruction accessing");
-  itoa(get_cr2(),buff);
-  printk(buff);
-  printk(" address.\n");
-  printk("-- killed --\n");
-}
+
 
 void clock_routine()
 {
@@ -107,7 +93,7 @@ void setTrapHandler(int vector, void (*handler)(), int maxAccessibleFromPL)
   idt[vector].flags           = flags;
   idt[vector].highOffset      = highWord((DWord)handler);
 }
-void pf_handler();
+
 void clock_handler();
 void keyboard_handler();
 void system_call_handler();
@@ -130,7 +116,6 @@ void setIdt()
   set_handlers();
 
   /* ADD INITIALIZATION CODE FOR INTERRUPT VECTOR */
-  setInterruptHandler(14, pf_handler, 0);
   setInterruptHandler(32, clock_handler, 0);
   setInterruptHandler(33, keyboard_handler, 0);
 

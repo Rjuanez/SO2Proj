@@ -40,10 +40,3 @@ ENTRY(setMSR)
 	pop %ebp
 	ret
 
-ENTRY(get_cr2)
-  movl %cr2, %eax
-	ret
-
-ENTRY(get_eip)
-  movl %eip, %eax
-	ret  

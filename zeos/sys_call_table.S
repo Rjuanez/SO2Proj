@@ -2,16 +2,16 @@
 #include <segment.h>
 
 ENTRY (sys_call_table)
-	.long sys_ni_syscall	//0
+	.long sys_get_key	//0
 	.long sys_exit		//1
 	.long sys_fork		//2
 	.long sys_ni_syscall	//3
 	.long sys_write		//4
-	.long sys_ni_syscall	//5
-	.long sys_ni_syscall	//6
-	.long sys_ni_syscall	//7
-	.long sys_ni_syscall	//8
-	.long sys_ni_syscall	//9
+	.long sys_get_big	//5
+	.long sys_free_big	//6
+	.long sys_set_screen_callback	//7
+	.long sys_get_small	//8
+	.long sys_free_small	//9
 	.long sys_gettime	//10
 	.long sys_ni_syscall	//11
 	.long sys_ni_syscall	//12
@@ -40,3 +40,5 @@ ENTRY (sys_call_table)
 	.long sys_get_stats	//35
 .globl MAX_SYSCALL
 MAX_SYSCALL = (. - sys_call_table)/4
+
+

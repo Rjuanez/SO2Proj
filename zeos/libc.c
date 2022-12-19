@@ -8,10 +8,6 @@
 
 int errno;
 
-void escribir (char * msg) {
-  if(write(1, msg, strlen(msg)) == -1) perror();
-}
-
 void itoa(int a, char *b)
 {
   int i, i1;

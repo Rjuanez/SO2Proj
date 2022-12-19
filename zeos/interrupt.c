@@ -33,13 +33,20 @@ char char_map[] =
 
 int zeos_ticks = 0;
 
+extern void (*screen_callback_ptr)(char*);
+extern char* screen_buffer;
 
+extern struct task_struct* idle_task;
 
 void clock_routine()
 {
   zeos_show_clock();
   zeos_ticks ++;
   
+  // idle_task is the only one without a defined space address to access the screen display
+  if(screen_buffer != (void*)0 && current() != idle_task)
+    (*screen_callback_ptr)(screen_buffer);
+
   schedule();
 }
 
@@ -47,7 +54,12 @@ void keyboard_routine()
 {
   unsigned char c = inb(0x60);
   
-  if (c&0x80) printc_xy(0, 0, char_map[c&0x7f]);
+  if (c&0x80){ 
+    printc_xy(0, 0, char_map[c&0x7f]);
+    CIRCULAR_BUFFER_ADD(&circularBuffer, char_map[c&0x7f]);
+    if(!list_empty(&blockedqueue))
+      task_switch_blocked();
+  }
 }
 
 void setInterruptHandler(int vector, void (*handler)(), int maxAccessibleFromPL)

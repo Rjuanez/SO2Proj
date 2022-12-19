@@ -10,6 +10,8 @@
 #include <io.h>
 #include <utils.h>
 #include <p_stats.h>
+#include <CircularBuffer.h>
+#include <kernel_mm.h>
 
 /**
  * Container for the Task array and 2 additional pages (the first and the last one)
@@ -26,12 +28,6 @@ struct task_struct *list_head_to_task_struct(struct list_head *l)
   return list_entry( l, struct task_struct, list);
 }
 #endif
-struct inputBuffer_struct charBuff;
-
-void insert_element(char c) {
-  *charBuff.in_pointer = c;
-   if (++charBuff.in_ponter == charBuff.out_pointer) ++charBuff.out_pointer;
-}
 
 extern struct list_head blocked;
 
@@ -39,6 +35,11 @@ extern struct list_head blocked;
 struct list_head freequeue;
 // Ready queue
 struct list_head readyqueue;
+// Blocked queue
+struct list_head blockedqueue;
+
+//circular Buffer
+struct CircularBuffer circularBuffer;
 
 void init_stats(struct stats *s)
 {
@@ -213,6 +214,14 @@ void init_task1(void)
   setMSR(0x175, 0, (unsigned long)&(uc->stack[KERNEL_STACK_SIZE]));
 
   set_cr3(c->dir_pages_baseAddr);
+
+  //Set big memmory managment page
+  int new_ph_pag = alloc_frame();
+  set_ss_pag(get_PT(c), PAG_LOG_BIG_MEM_MANAGMENT, new_ph_pag);
+
+  //Initialize bmm
+  init_big((struct Big_Memory_Managment*) (PAG_LOG_BIG_MEM_MANAGMENT<<12));
+
 }
 
 void init_freequeue()
@@ -233,6 +242,7 @@ void init_sched()
 {
   init_freequeue();
   INIT_LIST_HEAD(&readyqueue);
+  INIT_LIST_HEAD(&blockedqueue);
 }
 
 struct task_struct* current()
@@ -267,6 +277,40 @@ void inner_task_switch(union task_union *new)
 void force_task_switch()
 {
   update_process_state_rr(current(), &readyqueue);
+
+  sched_next_rr();
+}
+
+void sched_next_blocked(void)
+{
+  struct list_head *e;
+  struct task_struct *t;
+
+	e = list_first(&blockedqueue);
+  list_del(e);
+
+  t=list_head_to_task_struct(e);
+
+  t->state=ST_RUN;
+  remaining_quantum=get_quantum(t);
+
+  update_stats(&(current()->p_stats.system_ticks), &(current()->p_stats.elapsed_total_ticks));
+  update_stats(&(t->p_stats.ready_ticks), &(t->p_stats.elapsed_total_ticks));
+  t->p_stats.total_trans++;
+
+  task_switch((union task_union*)t);
+}
+
+void task_switch_blocked()
+{
+  update_process_state_rr(current(), &readyqueue);
+
+  sched_next_blocked();
+}
+
+void force_task_block()
+{
+  update_process_state_rr(current(), &blockedqueue);
 
   sched_next_rr();
 }

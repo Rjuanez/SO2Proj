@@ -10,21 +10,8 @@
 #include <mm_address.h>
 #include <stats.h>
 
-
 #define NR_TASKS      10
 #define KERNEL_STACK_SIZE	1024
-
-
-/* ---- ELEMENTOS GET_KEY ---- */
-
-struct inputBuffer_struct {
-  char buffer[64];
-  char* in_pointer = &buffer[0];
-  char* out_pointer = &buffer[0];
-};
-
-void insert_element(char c);
-char get_element();
 
 enum state_t { ST_RUN, ST_READY, ST_BLOCKED };
 
@@ -37,7 +24,6 @@ struct task_struct {
   int total_quantum;		/* Total quantum of the process */
   struct stats p_stats;		/* Process stats */
 };
-
 
 union task_union {
   struct task_struct task;
@@ -55,7 +41,10 @@ extern struct task_struct *idle_task;
 
 extern struct list_head freequeue;
 extern struct list_head readyqueue;
+extern struct list_head blockedqueue;
+extern struct list_head bmmqueue;
 
+extern struct CircularBuffer circularBuffer;
 /* Inicialitza les dades del proces inicial */
 void init_task1(void);
 
@@ -73,6 +62,10 @@ void switch_stack(int * save_sp, int new_sp);
 void sched_next_rr(void);
 
 void force_task_switch(void);
+
+void force_task_block(void);
+
+void task_switch_blocked(void);
 
 struct task_struct *list_head_to_task_struct(struct list_head *l);
 

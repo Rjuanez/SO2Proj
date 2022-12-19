@@ -100,5 +100,76 @@ ENTRY(get_stats)
 	popl %ebp
 	ret
 
+/* int get_key(char* c) */
+ENTRY(get_key)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx;  // Save EBX, ESI and EDI if modified
+	movl $0, %eax
+	movl 0x8(%ebp), %ebx;	//char* c
+	call syscall_sysenter
+	popl %ebx;
+	test %eax, %eax
+	js nok	// if (eax < 0) -->
+	popl %ebp
+	ret
 
+/* int set_screen_callback(char *(*callback_function)(char*)) */
+ENTRY(set_screen_callback)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx;  // Save EBX, ESI and EDI if modified
+	movl $7, %eax
+	movl 0x8(%ebp), %ebx;	//char *(*callback_function)(char*)
+	call syscall_sysenter
+	popl %ebx;
+	test %eax, %eax
+	js nok	// if (eax < 0) -->
+	popl %ebp
+	ret
 
+/* char* get_big()*/
+ENTRY(get_big)
+	pushl %ebp
+	movl %esp, %ebp
+	movl $5, %eax
+	call syscall_sysenter
+	popl %ebp
+	ret
+
+/* int free_big(char *s)*/
+ENTRY(free_big)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx;  // Save EBX, ESI and EDI if modified
+	movl $6, %eax
+	movl 0x8(%ebp), %ebx;	//char *s
+	call syscall_sysenter
+	popl %ebx;
+	test %eax, %eax
+	js nok	// if (eax < 0) -->
+	popl %ebp
+	ret
+
+/* char* get_small()*/
+ENTRY(get_small)
+	pushl %ebp
+	movl %esp, %ebp
+	movl $8, %eax
+	call syscall_sysenter
+	popl %ebp
+	ret
+
+/* int free_small(char *s)*/
+ENTRY(free_small)
+	pushl %ebp
+	movl %esp, %ebp
+	pushl %ebx;  // Save EBX, ESI and EDI if modified
+	movl $9, %eax
+	movl 0x8(%ebp), %ebx;	//char *s
+	call syscall_sysenter
+	popl %ebx;
+	test %eax, %eax
+	js nok	// if (eax < 0) -->
+	popl %ebp
+	ret

@@ -82,8 +82,6 @@ ENTRY(clock_handler)
       RESTORE_ALL
       iret;
 
-
-
 ENTRY(keyboard_handler)
       SAVE_ALL
       pushl %eax;

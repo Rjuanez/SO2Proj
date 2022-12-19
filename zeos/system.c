@@ -87,6 +87,8 @@ int __attribute__((__section__(".text.main")))
 
   //monoprocess_init_addr_space(); /* TO BE DELETED WHEN ADDED THE PROCESS MANAGEMENT CODE TO BECOME MULTIPROCESS */
 
+  INIT_CIRCULAR_BUFFER(&circularBuffer);
+
   /* Initialize Scheduling */
   init_sched();
 

@@ -26,7 +26,7 @@ SYSLDFLAGS = -T system.lds
 USRLDFLAGS = -T user.lds
 LINKFLAGS = -g
 
-SYSOBJ = interrupt.o entry.o sys_call_table.o io.o sched.o sys.o mm.o devices.o utils.o hardware.o list.o p_stats.o kernel-utils.o
+SYSOBJ = interrupt.o entry.o sys_call_table.o io.o sched.o sys.o mm.o devices.o utils.o hardware.o list.o p_stats.o kernel-utils.o CircularBuffer.o kernel_mm.o
 
 LIBZEOS = -L . -l zeos -l auxjp
 
@@ -67,6 +67,10 @@ sys_call_table.s: sys_call_table.S $(INCLUDEDIR)/asm.h $(INCLUDEDIR)/segment.h
 user.o:user.c $(INCLUDEDIR)/libc.h
 
 interrupt.o:interrupt.c $(INCLUDEDIR)/interrupt.h $(INCLUDEDIR)/segment.h $(INCLUDEDIR)/types.h
+
+CircularBuffer.o:CircularBuffer.c $(INCLUDEDIR)/CircularBuffer.h
+
+kernel_mm.o:kernel_mm.c $(INCLUDEDIR)/kernel_mm.h
 
 io.o:io.c $(INCLUDEDIR)/io.h
 

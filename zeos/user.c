@@ -34,47 +34,46 @@ int __attribute__ ((__section__(".text.main")))
   write(1,buff,strlen(buff));
   */
 
- // set_screen_callback(&screen_callback);
+ int a =set_screen_callback(&screen_callback);
   
- //   int a = get_key(buff);
- //   if(a) write(1,buff, 1);
+  itoa(a,&buff);
+  write(1,buff, 1);
 
-char* big_mem = get_big();
+// char* big_mem = get_big();
+// for(i = 0; i<size; i++)
+//     *ptr++ = 'd';
+// //   write(1,"\n",1);
+// screen_buff=big_mem;
 
- itoa((int)big_mem,buff);
- write(1,buff,strlen(buff));
+//   char* small_mem = get_small();
 
-  write(1,"\n",1);
+//   itoa((int)small_mem,buff);
+//  write(1,buff,strlen(buff));
+//   write(1,"\n",1);
 
-  char* small_mem = get_small();
+//   char* small_mem1 = get_small();
 
-  itoa((int)small_mem,buff);
- write(1,buff,strlen(buff));
-  write(1,"\n",1);
+//     itoa((int)small_mem1,buff);
+//  write(1,buff,strlen(buff));
+//   write(1,"\n",1);
 
-  char* small_mem1 = get_small();
+//     char* small_mem2 = free_small(small_mem1);
 
-    itoa((int)small_mem1,buff);
- write(1,buff,strlen(buff));
-  write(1,"\n",1);
+//     itoa((int)small_mem2,buff);
+//  write(1,buff,strlen(buff));
+//   write(1,"\n",1);
 
-    char* small_mem2 = free_small(small_mem1);
+//   small_mem1 = get_small();
 
-    itoa((int)small_mem2,buff);
- write(1,buff,strlen(buff));
-  write(1,"\n",1);
-
-  small_mem1 = get_small();
-
-    itoa((int)small_mem1,buff);
- write(1,buff,strlen(buff));
-  write(1,"\n",1);
+//     itoa((int)small_mem1,buff);
+//  write(1,buff,strlen(buff));
+//   write(1,"\n",1);
 
 
 
 // write(1,"\n",1);
 
-// int fk = fork();
+int fk = fork();
 
 //   itoa((int)get_big(),buff);
 //  write(1,buff,strlen(buff));

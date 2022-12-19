@@ -338,23 +338,15 @@ int sys_get_key(char* c){
   return 1;
 }
 
-void (*screen_callback_ptr)(char*);
-char* screen_buffer;
-
 unsigned char big_mem[NUM_PAG_BIG_MEM];
 unsigned char big_mem_it=0;
 
 int sys_set_screen_callback(void *(*callback_function)(char*)){
   if (callback_function == NULL) return -EINVAL;
-  page_table_entry *process_PT = get_PT(current());
 
   //ASSIGN SCREEN DEVICE TO USER ACCESIBLE PAGE
-
-  set_ss_pag(process_PT, PAG_LOG_INIT_BIG_MEM, get_frame(process_PT,0xb8));
-  big_mem[0]=1; big_mem_it++;
-  screen_callback_ptr = callback_function;
-  screen_buffer = (char*)((PAG_LOG_INIT_BIG_MEM)<<12);
-  return 0;
+  current()->screen_callback_ptr = callback_function;
+  return (unsigned int) current()->screen_callback_ptr;
 }
 
 //JUST LOOK FOR FREE SPACE

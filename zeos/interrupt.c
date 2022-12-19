@@ -8,6 +8,7 @@
 #include <io.h>
 
 #include <sched.h>
+#include <mm_address.h>
 
 #include <zeos_interrupt.h>
 
@@ -32,10 +33,6 @@ char char_map[] =
 };
 
 int zeos_ticks = 0;
-
-extern void (*screen_callback_ptr)(char*);
-extern char* screen_buffer;
-
 extern struct task_struct* idle_task;
 
 void clock_routine()
@@ -44,8 +41,24 @@ void clock_routine()
   zeos_ticks ++;
   
   // idle_task is the only one without a defined space address to access the screen display
-  if(screen_buffer != (void*)0 && current() != idle_task)
-    (*screen_callback_ptr)(screen_buffer);
+  if(current()->screen_callback_ptr != (void*)0){
+  page_table_entry *process_PT = get_PT(current());
+  set_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER, get_frame(process_PT,0xb8));
+  //guardem context usuari
+  int* cpy_ptr = current()->context;
+  int* aux_ptr = current();
+  for (int i =0; i<17; i++){
+    cpy_ptr[i]=aux_ptr[(KERNEL_STACK_SIZE-17)+i];
+  }
+  //agafem esp usuari
+  int* esp = (int*) aux_ptr[KERNEL_STACK_SIZE-2];
+  (*--esp)= (PAG_LOG_PRIMARY_BUFFER<<12);
+  (*--esp)= aux_ptr[KERNEL_STACK_SIZE-5];
+  aux_ptr[KERNEL_STACK_SIZE]= current()->screen_callback_ptr;
+
+  //delete
+    del_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER);
+  }
 
   schedule();
 }

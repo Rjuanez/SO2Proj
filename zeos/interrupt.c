@@ -50,11 +50,14 @@ void clock_routine()
   for (int i =0; i<17; i++){
     cpy_ptr[i]=stack_ptr[KERNEL_STACK_SIZE-17+i];
   }
-  //agafem esp usuari
+  //agafem pila de usuari
   unsigned long* esp = (unsigned long*) stack_ptr[KERNEL_STACK_SIZE-2];
-  (*--esp)= (PAG_LOG_PRIMARY_BUFFER<<12);
-  (*--esp)= stack_ptr[KERNEL_STACK_SIZE-5];
-  //(--esp);
+
+  //screen
+  (*--esp) =(PAG_LOG_PRIMARY_BUFFER<<12);
+  //@ret
+  (*--esp);
+  
   stack_ptr[KERNEL_STACK_SIZE-2]=esp;
 
   stack_ptr[KERNEL_STACK_SIZE-5]= current()->screen_callback_ptr;

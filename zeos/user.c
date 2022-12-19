@@ -2,7 +2,7 @@
 
 char buff[24];
 
-char screen_buff[25][80][2];
+char* screen_buff;
 
 int pid;
 
@@ -25,6 +25,7 @@ int __attribute__ ((__section__(".text.main")))
 
   unsigned int size = 25*80*2;
   unsigned int i;
+  screen_buff = get_big();
   char* ptr = screen_buff;
   for(i = 0; i<size; i++)
     *ptr++ = 'c';

@@ -354,8 +354,10 @@ int sys_restore_ctx(){
   unsigned long* stack_ptr = current();
 
     for (int i =0; i<17; i++){
-    stack_ptr[KERNEL_STACK_SIZE-17+i] = ctx_ptr;
+    stack_ptr[KERNEL_STACK_SIZE-17+i] = ctx_ptr[i];
   }
+  page_table_entry *process_PT = get_PT(current());
+  del_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER);
 }
 
 //JUST LOOK FOR FREE SPACE

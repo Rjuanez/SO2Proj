@@ -37,7 +37,7 @@ int __attribute__ ((__section__(".text.main")))
  int a =set_screen_callback(&screen_callback);
   
   itoa(a,&buff);
-  write(1,buff, 1);
+  write(1,buff, strlen(buff));
 
 // char* big_mem = get_big();
 // for(i = 0; i<size; i++)

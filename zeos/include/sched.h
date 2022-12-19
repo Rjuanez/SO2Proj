@@ -24,7 +24,7 @@ struct task_struct {
   int total_quantum;		/* Total quantum of the process */
   struct stats p_stats;		/* Process stats */
   void (*screen_callback_ptr)(char*); /* punter a screen_callback*/
-  int context[17];
+  unsigned long context[17];
 };
 
 union task_union {

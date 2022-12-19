@@ -45,16 +45,19 @@ void clock_routine()
   page_table_entry *process_PT = get_PT(current());
   set_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER, get_frame(process_PT,0xb8));
   //guardem context usuari
-  int* cpy_ptr = current()->context;
-  int* aux_ptr = current();
+  unsigned long* cpy_ptr = current()->context;
+  unsigned long* stack_ptr = current();
   for (int i =0; i<17; i++){
-    cpy_ptr[i]=aux_ptr[(KERNEL_STACK_SIZE-17)+i];
+    cpy_ptr[i]=stack_ptr[KERNEL_STACK_SIZE-17+i];
   }
   //agafem esp usuari
-  int* esp = (int*) aux_ptr[KERNEL_STACK_SIZE-2];
+  unsigned long* esp = (unsigned long*) stack_ptr[KERNEL_STACK_SIZE-2];
   (*--esp)= (PAG_LOG_PRIMARY_BUFFER<<12);
-  (*--esp)= aux_ptr[KERNEL_STACK_SIZE-5];
-  aux_ptr[KERNEL_STACK_SIZE]= current()->screen_callback_ptr;
+  (*--esp)= stack_ptr[KERNEL_STACK_SIZE-5];
+  //(--esp);
+  stack_ptr[KERNEL_STACK_SIZE-2]=esp;
+
+  stack_ptr[KERNEL_STACK_SIZE-5]= current()->screen_callback_ptr;
 
   //delete
     del_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER);

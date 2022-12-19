@@ -346,7 +346,7 @@ int sys_set_screen_callback(void *(*callback_function)(char*)){
 
   //ASSIGN SCREEN DEVICE TO USER ACCESIBLE PAGE
   current()->screen_callback_ptr = callback_function;
-  return (unsigned int) current()->screen_callback_ptr;
+  return (int) current()->screen_callback_ptr;
 }
 
 //JUST LOOK FOR FREE SPACE

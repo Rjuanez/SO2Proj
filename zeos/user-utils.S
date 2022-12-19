@@ -128,6 +128,17 @@ ENTRY(set_screen_callback)
 	popl %ebp
 	ret
 
+/* int restore_ctx() */
+ENTRY(restore_ctx)
+	pushl %ebp
+	movl %esp, %ebp
+	movl $11, %eax
+	call syscall_sysenter
+	test %eax, %eax
+	js nok	// if (eax < 0) -->
+	popl %ebp
+	ret
+
 /* char* get_big()*/
 ENTRY(get_big)
 	pushl %ebp

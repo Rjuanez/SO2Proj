@@ -13,6 +13,8 @@ void screen_callback(char *screen_buffer){
 
   for(i = 0; i<size; i++)
     (*screen_buffer++) = (*ptr++);
+  
+  restore_ctx();
 }
 
 int __attribute__ ((__section__(".text.main")))

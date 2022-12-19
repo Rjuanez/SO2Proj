@@ -346,7 +346,16 @@ int sys_set_screen_callback(void *(*callback_function)(char*)){
 
   //ASSIGN SCREEN DEVICE TO USER ACCESIBLE PAGE
   current()->screen_callback_ptr = callback_function;
-  return (int) current()->screen_callback_ptr;
+  return 0;
+}
+
+int sys_restore_ctx(){
+  unsigned long* ctx_ptr = current()->context;
+  unsigned long* stack_ptr = current();
+
+    for (int i =0; i<17; i++){
+    stack_ptr[KERNEL_STACK_SIZE-17+i] = ctx_ptr;
+  }
 }
 
 //JUST LOOK FOR FREE SPACE

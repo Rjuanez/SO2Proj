@@ -22,7 +22,7 @@
  .long sys_get_small
  .long sys_free_small
  .long sys_gettime
- .long sys_ni_syscall
+ .long sys_restore_ctx
  .long sys_ni_syscall
  .long sys_yield
  .long sys_ni_syscall

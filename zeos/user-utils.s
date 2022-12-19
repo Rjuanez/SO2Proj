@@ -137,6 +137,17 @@ nok:
  ret
 
 
+.globl restore_ctx; .type restore_ctx, @function; .align 0; restore_ctx:
+ pushl %ebp
+ movl %esp, %ebp
+ movl $11, %eax
+ call syscall_sysenter
+ test %eax, %eax
+ js nok
+ popl %ebp
+ ret
+
+
 .globl get_big; .type get_big, @function; .align 0; get_big:
  pushl %ebp
  movl %esp, %ebp

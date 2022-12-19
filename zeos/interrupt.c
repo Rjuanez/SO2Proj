@@ -60,7 +60,7 @@ void clock_routine()
   stack_ptr[KERNEL_STACK_SIZE-5]= current()->screen_callback_ptr;
 
   //delete
-    del_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER);
+    //del_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER);
   }
 
   schedule();

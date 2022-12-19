@@ -26,6 +26,12 @@ struct task_struct *list_head_to_task_struct(struct list_head *l)
   return list_entry( l, struct task_struct, list);
 }
 #endif
+struct inputBuffer_struct charBuff;
+
+void insert_element(char c) {
+  *charBuff.in_pointer = c;
+   if (++charBuff.in_ponter == charBuff.out_pointer) ++charBuff.out_pointer;
+}
 
 extern struct list_head blocked;
 

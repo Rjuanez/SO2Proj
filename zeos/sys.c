@@ -352,9 +352,10 @@ int sys_set_screen_callback(void *(*callback_function)(char*)){
 int sys_restore_ctx(){
   unsigned long* ctx_ptr = current()->context;
   unsigned long* stack_ptr = current();
-
+  if (ctx_ptr[5] == 0) return -EPERM;
     for (int i =0; i<17; i++){
     stack_ptr[KERNEL_STACK_SIZE-17+i] = ctx_ptr[i];
+    ctx_ptr[i]=0;
   }
   page_table_entry *process_PT = get_PT(current());
   del_ss_pag(process_PT, PAG_LOG_PRIMARY_BUFFER);

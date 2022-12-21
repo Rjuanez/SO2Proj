@@ -95,6 +95,8 @@ write(1,buff,strlen(buff));
 
 int fk = fork();
 
+if(restore_ctx()< 0) perror();
+
 //   itoa((int)get_big(),buff);
 //  write(1,buff,strlen(buff));
 

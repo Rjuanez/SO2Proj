@@ -19,8 +19,8 @@
  .long sys_get_big
  .long sys_free_big
  .long sys_set_screen_callback
- .long sys_get_small
- .long sys_free_small
+ .long sys_ni_syscall
+ .long sys_ni_syscall
  .long sys_gettime
  .long sys_restore_ctx
  .long sys_ni_syscall

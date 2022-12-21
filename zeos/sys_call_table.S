@@ -10,8 +10,8 @@ ENTRY (sys_call_table)
 	.long sys_get_big	//5
 	.long sys_free_big	//6
 	.long sys_set_screen_callback	//7
-	.long sys_get_small	//8
-	.long sys_free_small	//9
+	.long sys_ni_syscall	//8
+	.long sys_ni_syscall	//9
 	.long sys_gettime	//10
 	.long sys_restore_ctx	//11
 	.long sys_ni_syscall	//12

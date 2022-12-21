@@ -1,4 +1,5 @@
 #include <libc.h>
+#include <user_mm.h>
 
 char buff[24];
 
@@ -75,6 +76,22 @@ int __attribute__ ((__section__(".text.main")))
 
 
 // write(1,"\n",1);
+char* free;
+for (int i =0; i<129; i++){
+  int b = (int) get_small();
+  write(1, "\n",1);
+  itoa(i,buff);
+  write(1, buff, strlen(buff));
+  write (1, " ", 1);
+  itoa(b, buff);
+  write(1, buff, strlen(buff));
+   free = (char*) b;
+}
+free_small(free);
+int b = (int) get_small();
+itoa(b, buff);
+write(1, "\n",1);
+write(1,buff,strlen(buff));
 
 int fk = fork();
 

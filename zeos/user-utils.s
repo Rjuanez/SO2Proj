@@ -169,26 +169,3 @@ nok:
  js nok
  popl %ebp
  ret
-
-
-.globl get_small; .type get_small, @function; .align 0; get_small:
- pushl %ebp
- movl %esp, %ebp
- movl $8, %eax
- call syscall_sysenter
- popl %ebp
- ret
-
-
-.globl free_small; .type free_small, @function; .align 0; free_small:
- pushl %ebp
- movl %esp, %ebp
- pushl %ebx;
- movl $9, %eax
- movl 0x8(%ebp), %ebx;
- call syscall_sysenter
- popl %ebx;
- test %eax, %eax
- js nok
- popl %ebp
- ret

@@ -161,26 +161,3 @@ ENTRY(free_big)
 	js nok	// if (eax < 0) -->
 	popl %ebp
 	ret
-
-/* char* get_small()*/
-ENTRY(get_small)
-	pushl %ebp
-	movl %esp, %ebp
-	movl $8, %eax
-	call syscall_sysenter
-	popl %ebp
-	ret
-
-/* int free_small(char *s)*/
-ENTRY(free_small)
-	pushl %ebp
-	movl %esp, %ebp
-	pushl %ebx;  // Save EBX, ESI and EDI if modified
-	movl $9, %eax
-	movl 0x8(%ebp), %ebx;	//char *s
-	call syscall_sysenter
-	popl %ebx;
-	test %eax, %eax
-	js nok	// if (eax < 0) -->
-	popl %ebp
-	ret

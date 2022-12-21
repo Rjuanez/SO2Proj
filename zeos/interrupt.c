@@ -55,11 +55,12 @@ void clock_routine()
 
   //screen
   (*--esp) =(PAG_LOG_PRIMARY_BUFFER<<12);
-  //@ret
+  //@ret (dona igual perque farem un ret desde sistema!)
   (*--esp);
   
+  //new esp
   stack_ptr[KERNEL_STACK_SIZE-2]=esp;
-
+  //eip <- func
   stack_ptr[KERNEL_STACK_SIZE-5]= current()->screen_callback_ptr;
 
   //delete

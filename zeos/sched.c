@@ -219,9 +219,6 @@ void init_task1(void)
   int new_ph_pag = alloc_frame();
   set_ss_pag(get_PT(c), PAG_LOG_BIG_MEM_MANAGMENT, new_ph_pag);
 
-  //Initialize bmm
-  init_big((struct Big_Memory_Managment*) (PAG_LOG_BIG_MEM_MANAGMENT<<12));
-
 }
 
 void init_freequeue()

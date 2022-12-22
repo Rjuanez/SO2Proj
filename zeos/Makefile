@@ -31,7 +31,7 @@ SYSOBJ = interrupt.o entry.o sys_call_table.o io.o sched.o sys.o mm.o devices.o 
 LIBZEOS = -L . -l zeos -l auxjp
 
 #add to USROBJ the object files required to complete the user program
-USROBJ = libc.o user-utils.o user_mm.o # libjp.a
+USROBJ = libc.o user-utils.o user_mm.o game.o# libjp.a
 
 all:zeos.bin
 
@@ -73,6 +73,8 @@ CircularBuffer.o:CircularBuffer.c $(INCLUDEDIR)/CircularBuffer.h
 kernel_mm.o:kernel_mm.c $(INCLUDEDIR)/kernel_mm.h
 
 user_mm.o:user_mm.c $(INCLUDEDIR)/user_mm.h
+
+game.o:game.c $(INCLUDEDIR)/game.h
 
 io.o:io.c $(INCLUDEDIR)/io.h
 

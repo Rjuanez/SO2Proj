@@ -1,9 +1,12 @@
 #include <libc.h>
 #include <user_mm.h>
+#include <game.h>
 
 char buff[24];
 
 char* screen_buff;
+
+char s[1];
 
 int pid;
 
@@ -18,6 +21,25 @@ void screen_callback(char *screen_buffer){
   restore_ctx();
 }
 
+//inicialitzem la pantalla
+void start_screen(char *screen_buffer){
+  unsigned int i;
+  unsigned int size = 25*80*2;
+  for (i=0; i<size; i+=2){
+    screen_buffer[i] = ' ';
+    screen_buffer[i+1] = 0;
+    }
+}
+
+void print_crosshair(struct crosshair* ch){
+  char* cpy = &screen_buff[(ch->x*80*2)+ch->y*2];
+  for(int i =0; i<18;i+=2){
+    cpy[i]= ch->crosshair[i];
+    cpy[i+1] = '^';
+    if (i%3 ==2) cpy+=160-6;
+    }
+}
+
 int __attribute__ ((__section__(".text.main")))
   main(void)
 {
@@ -27,104 +49,38 @@ int __attribute__ ((__section__(".text.main")))
   unsigned int size = 25*80*2;
   unsigned int i;
   screen_buff = get_big();
-  char* ptr = screen_buff;
-  for(i = 0; i<size; i++)
-    *ptr++ = 'c';
-  /*
-  DEBUUUUG
-  write(1, screen, size);
-  void (*ptr_void)();
-  itoa(errno,buff);
-  write(1,buff,strlen(buff));
-  */
 
- int a =set_screen_callback(&screen_callback);
-  
-  itoa(a,&buff);
-  write(1,buff, strlen(buff));
-
-// char* big_mem = get_big();
-// for(i = 0; i<size; i++)
-//     *ptr++ = 'd';
-// //   write(1,"\n",1);
-// screen_buff=big_mem;
-
-//   char* small_mem = get_small();
-
-//   itoa((int)small_mem,buff);
-//  write(1,buff,strlen(buff));
-//   write(1,"\n",1);
-
-//   char* small_mem1 = get_small();
-
-//     itoa((int)small_mem1,buff);
-//  write(1,buff,strlen(buff));
-//   write(1,"\n",1);
-
-//     char* small_mem2 = free_small(small_mem1);
-
-//     itoa((int)small_mem2,buff);
-//  write(1,buff,strlen(buff));
-//   write(1,"\n",1);
-
-//   small_mem1 = get_small();
-
-//     itoa((int)small_mem1,buff);
-//  write(1,buff,strlen(buff));
-//   write(1,"\n",1);
-
-
+  start_screen(screen_buff);
+  set_screen_callback(&screen_callback);
 
 // write(1,"\n",1);
-char* free;
-for (int i =0; i<129; i++){
-  int b = (int) get_small();
-  write(1, "\n",1);
-  itoa(i,buff);
-  write(1, buff, strlen(buff));
-  write (1, " ", 1);
-  itoa(b, buff);
-  write(1, buff, strlen(buff));
-   free = (char*) b;
-}
-free_small(free);
-int b = (int) get_small();
-itoa(b, buff);
-write(1, "\n",1);
-write(1,buff,strlen(buff));
+// char* free;
+// for (int i =0; i<129; i++){
+//   int b = (int) get_small();
+//   write(1, "\n",1);
+//   itoa(i,buff);
+//   write(1, buff, strlen(buff));
+//   write (1, " ", 1);
+//   itoa(b, buff);
+//   write(1, buff, strlen(buff));
+//    free = (char*) b;
+// }
 
 int fk = fork();
 
-if(restore_ctx()< 0) perror();
+if (fk ==0){
+  struct crosshair* ch = (struct crosshair*) get_small();
+  init_crosshair(ch);
+  while(1){
+    get_key(s,1);
+    write(1,"telca",strlen("tecla"));
+    itoa(ch->x,buff);
+    write(1,buff,strlen(buff));
+    print_crosshair(ch);
+  }
+}
 
-//   itoa((int)get_big(),buff);
-//  write(1,buff,strlen(buff));
-
-// write(1,"\n",1);
-
-//   if(fk<0){
-//       itoa(errno,buff);
-//       write(1,buff,strlen(buff));
-//       write(1,"\n",1);
-//   }else{
-//     itoa(fk,buff);
-//       write(1,buff,strlen(buff));
-//       write(1,"\n",1);
-//   }
-// if (fk==0)exit();
-
- 
-
-//   write(1,"llegaGet",8);
-
-//   int pruebaGet = (int)get_big();
-//   itoa(pruebaGet,buff);
-//   write(1,buff,strlen(buff));
-
-// write(1,"llegaGet",8);
-// int prueba = free_big(buff);
-//   itoa(prueba,buff);
-//   write(1,buff,strlen(buff));
+exit();
 
   while(1) {
    }

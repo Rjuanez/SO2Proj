@@ -327,15 +327,22 @@ int sys_get_stats(int pid, struct stats *st)
   return -ESRCH; /*ESRCH */
 }
 
-int sys_get_key(char* c){
+int sys_get_key(char* c, int block){
+  if (!access_ok(VERIFY_READ, c, 1)) return -EFAULT;
+  char localkey[1];
+  copy_from_user(c, localkey, 1);
   unsigned char* ret;
   if ((ret = CIRCULAR_BUFFER_GET(&circularBuffer)) == (void*) 0){
-    //Blocked, falta verificar!!!
-    force_task_block();
-    ret = CIRCULAR_BUFFER_GET(&circularBuffer);
+    if (block){
+      force_task_block();
+      ret = CIRCULAR_BUFFER_GET(&circularBuffer);
+    }else{
+      return -EAGAIN;
+    }
   }
-  *c = *ret;
-  return 1;
+  localkey[0]= *ret;
+  copy_to_user(localkey, c, TAM_BUFFER);
+  return 0;
 }
 
 unsigned char big_mem[NUM_PAG_BIG_MEM];
@@ -378,9 +385,13 @@ char* sys_get_big(){
 }
 
 int sys_free_big(char *s){
+  //si nullptr o si no es aligned a big
+  if ((s == (void*)0) || ((unsigned int)s & 0x000FFF) !=0) return -EPERM;
   struct Big_Memory_Managment* bmm = (struct Big_Memory_Managment*) (PAG_LOG_BIG_MEM_MANAGMENT<<12);
   int free_ptr = (((unsigned int) s)>>12);
 
+  //si la pagina no estava reservada
+  if (bmm->big_mem[free_ptr-PAG_LOG_INIT_BIG_MEM] != 1) return -EPERM;
   free_frame(get_frame(get_PT(current()),free_ptr));
   del_ss_pag(get_PT(current()), free_ptr);
   free_big_space(bmm, free_ptr-PAG_LOG_INIT_BIG_MEM);

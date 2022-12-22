@@ -115,6 +115,7 @@ nok:
  pushl %ebx;
  movl $0, %eax
  movl 0x8(%ebp), %ebx;
+ movl 0xC(%ebp), %ecx;
  call syscall_sysenter
  popl %ebx;
  test %eax, %eax

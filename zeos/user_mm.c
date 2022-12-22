@@ -83,10 +83,38 @@ void free_small_entry(struct Small_Memory_Managment* smm, int entry){
     }
 }
 
+extern errno;
+
 int free_small(char *s){
   unsigned int aux = ((unsigned int)s);
+  //no aligned con 32 bytes
+  itoa(aux&0x0000001F,buff);
+  
+  if ((aux&0x0000001F) != 0){
+    errno = 1;
+    return -1;
+  }
   struct Small_Memory_Managment* smm=(struct Small_Memory_Managment*) (aux&0xFFFFF000);
+  //miramos si la pagina big esta reservada
+  struct Small_Memory_Managment* aux_smm = first_small;
+  unsigned char found = 0;
+  while(aux_smm != (void*)0){
+    if (aux_smm == smm) found = 1;
+    aux_smm = aux_smm ->next_big;
+  }
+  if (!found){
+    errno = 1;
+    return -1;
+  }
   int entry = (aux&0x00000FFF)>>5;
+  int i = entry/8;
+  //entry % 8
+  int j = entry & 0x3;
+  //la entrada no estava reservada
+  if (smm->small_entry[i]&(0x01<<j)==0){
+    errno = 1;
+    return -1;
+  }
   free_small_entry(smm,entry);
   return 0;
 }

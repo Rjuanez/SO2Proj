@@ -107,6 +107,7 @@ ENTRY(get_key)
 	pushl %ebx;  // Save EBX, ESI and EDI if modified
 	movl $0, %eax
 	movl 0x8(%ebp), %ebx;	//char* c
+	movl 0xC(%ebp), %ecx;	//int block
 	call syscall_sysenter
 	popl %ebx;
 	test %eax, %eax

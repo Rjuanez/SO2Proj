@@ -395,6 +395,7 @@ int sys_free_big(char *s){
   free_frame(get_frame(get_PT(current()),free_ptr));
   del_ss_pag(get_PT(current()), free_ptr);
   free_big_space(bmm, free_ptr-PAG_LOG_INIT_BIG_MEM);
+  set_cr3(get_DIR(current()));
 
   return 0;
 }

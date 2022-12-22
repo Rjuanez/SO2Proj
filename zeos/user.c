@@ -36,7 +36,7 @@ void print_crosshair(struct crosshair* ch){
   for(int i =0; i<18;i+=2){
     cpy[i]= ch->crosshair[i];
     cpy[i+1] = '^';
-    if (i%3 ==2) cpy+=160-6;
+    if (i%3 ==2) cpy+=160-4;
     }
 }
 
@@ -66,6 +66,9 @@ int __attribute__ ((__section__(".text.main")))
 //    free = (char*) b;
 // }
 
+char* big = get_big();
+if (free_big(big)<0) perror();
+
 int fk = fork();
 
 if (fk ==0){
@@ -74,8 +77,7 @@ if (fk ==0){
   while(1){
     get_key(s,1);
     write(1,"telca",strlen("tecla"));
-    itoa(ch->x,buff);
-    write(1,buff,strlen(buff));
+    write (1,s,1);
     print_crosshair(ch);
   }
 }

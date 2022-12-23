@@ -21,6 +21,11 @@ struct square{
   unsigned int size;
   unsigned int dir_vec[2];
   char color;
+  unsigned int time;
 };
 
 void init_square(struct square* sq, int x, int y, int size,char color, int x_dir, int y_dir);
+
+void move_square(struct square* sq);
+
+int shot_square(struct crosshair* ch, struct square* sq);

@@ -126,7 +126,7 @@ int __attribute__ ((__section__(".text.main")))
 
   struct crosshair* ch = (struct crosshair*) get_small();
   init_crosshair(ch);
-  int i=0;
+
   for(i=0; i<100; i++){
     remove_square(sq);
     remove_crosshair(ch);

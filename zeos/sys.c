@@ -386,12 +386,12 @@ char* sys_get_big(){
 
 int sys_free_big(char *s){
   //si nullptr o si no es aligned a big
-  if ((s == (void*)0) || ((unsigned int)s & 0x000FFF) !=0) return -EPERM;
+  if ((s == (void*)0) || ((unsigned int)s & 0x000FFF) !=0) return -EFAULT;
   struct Big_Memory_Managment* bmm = (struct Big_Memory_Managment*) (PAG_LOG_BIG_MEM_MANAGMENT<<12);
   int free_ptr = (((unsigned int) s)>>12);
 
   //si la pagina no estava reservada
-  if (bmm->big_mem[free_ptr-PAG_LOG_INIT_BIG_MEM] != 1) return -EPERM;
+  if (bmm->big_mem[free_ptr-PAG_LOG_INIT_BIG_MEM] != 1) return -EFAULT;
   free_frame(get_frame(get_PT(current()),free_ptr));
   del_ss_pag(get_PT(current()), free_ptr);
   free_big_space(bmm, free_ptr-PAG_LOG_INIT_BIG_MEM);

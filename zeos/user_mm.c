@@ -91,7 +91,7 @@ int free_small(char *s){
   itoa(aux&0x0000001F,buff);
   
   if ((aux&0x0000001F) != 0){
-    errno = 1;
+    errno = 14;
     return -1;
   }
   struct Small_Memory_Managment* smm=(struct Small_Memory_Managment*) (aux&0xFFFFF000);
@@ -99,7 +99,7 @@ int free_small(char *s){
   struct Small_Memory_Managment* aux_smm = first_small;
   unsigned char found = 0;
   while(aux_smm != (void*)0){
-    if (aux_smm == smm) found = 1;
+    if (aux_smm == smm) found = 14;
     aux_smm = aux_smm ->next_big;
   }
   if (!found){
@@ -112,7 +112,7 @@ int free_small(char *s){
   int j = entry & 0x3;
   //la entrada no estava reservada
   if (smm->small_entry[i]&(0x01<<j)==0){
-    errno = 1;
+    errno = 14;
     return -1;
   }
   free_small_entry(smm,entry);

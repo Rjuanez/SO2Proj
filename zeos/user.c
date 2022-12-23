@@ -32,13 +32,36 @@ void start_screen(char *screen_buffer){
 }
 
 void print_crosshair(struct crosshair* ch){
-  char* cpy = &screen_buff[(ch->x*80*2)+ch->y*2];
-  for(int i =0; i<18;i+=2){
-    cpy[i]= ch->crosshair[i];
-    cpy[i+1] = '^';
-    if (i%3 ==2) cpy+=160-4;
+  char* cpy = &screen_buff[(ch->y*80*2)+ch->x*2];
+  (*cpy++) = ch->crosshair;
+  *cpy = (*cpy&0xF0)|0x0F;
+}
+
+void remove_crosshair(struct crosshair* ch){
+  char* cpy = &screen_buff[(ch->y*80*2)+ch->x*2];
+  (*cpy++) = ' ';
+}
+
+void print_square(struct square* sq){
+  char* cpy = &screen_buff[(sq->y*80*2)+sq->x*2];
+  int i, j;
+  for (i=0; i<sq->size; i++)
+    for (j=0; j<sq->size*2; j++){
+      cpy[(i*80*2)+j*2] = ' ';
+      cpy[(i*80*2)+j*2+1] = sq->color;
     }
 }
+
+void remove_square(struct square* sq){
+  char* cpy = &screen_buff[(sq->y*80*2)+sq->x*2];
+  int i, j;
+  for (i=0; i<sq->size; i++)
+    for (j=0; j<sq->size*2; j++){
+      cpy[(i*80*2)+j*2] = ' ';
+      cpy[(i*80*2)+j*2+1] = 0x0F;
+    }
+}
+
 
 int __attribute__ ((__section__(".text.main")))
   main(void)
@@ -53,37 +76,93 @@ int __attribute__ ((__section__(".text.main")))
   start_screen(screen_buff);
   set_screen_callback(&screen_callback);
 
-// write(1,"\n",1);
-// char* free;
-// for (int i =0; i<129; i++){
-//   int b = (int) get_small();
-//   write(1, "\n",1);
-//   itoa(i,buff);
-//   write(1, buff, strlen(buff));
-//   write (1, " ", 1);
-//   itoa(b, buff);
-//   write(1, buff, strlen(buff));
-//    free = (char*) b;
+// int fk = fork();
+
+// if (fk ==0){
+//   struct crosshair* ch = (struct crosshair*) get_small();
+//   init_crosshair(ch);
+//   while(1){
+//     get_key(s,0);
+//     remove_crosshair(ch);
+//     switch (*s)
+//     {
+//       case 'w':
+//       crosshair_move_up(ch);
+//       *s = ' ';
+//       break;
+
+//       case 's':
+//       crosshair_move_down(ch);
+//       *s = ' ';
+//       break;
+
+//       case 'a':
+//       crosshair_move_left(ch);
+//       *s = ' ';
+//       break;
+
+//       case 'd':
+//       crosshair_move_right(ch);
+//       *s = ' ';
+//       break;
+    
+//     default:
+//       break;
+//     }
+//     print_crosshair(ch);
+//   }
 // }
 
-char* big = get_big();
-if (free_big(big)<0) perror();
+// fk = fork();
 
-int fk = fork();
+// if (fk == 0){
+//     struct square* sq = (struct square*) get_small();
+//     init_square(sq,0,0,2);
+//     while(1) print_square(sq);
+// }
 
-if (fk ==0){
+  struct square* sq = (struct square*) get_small();
+  init_square(sq,0,0,2,0x70,1,0);
+  print_square(sq);
+  for( int i=0; i<78; i++){
+  remove_square(sq);
+  move_square();}
+
+  print_square(sq);
+
+
   struct crosshair* ch = (struct crosshair*) get_small();
   init_crosshair(ch);
-  while(1){
-    get_key(s,1);
-    write(1,"telca",strlen("tecla"));
-    write (1,s,1);
-    print_crosshair(ch);
-  }
-}
-
-exit();
 
   while(1) {
+    get_key(s,0);
+    remove_crosshair(ch);
+    switch (*s)
+    {
+      case 'w':
+      crosshair_move_up(ch);
+      *s = ' ';
+      break;
+
+      case 's':
+      crosshair_move_down(ch);
+      *s = ' ';
+      break;
+
+      case 'a':
+      crosshair_move_left(ch);
+      *s = ' ';
+      break;
+
+      case 'd':
+      crosshair_move_right(ch);
+      *s = ' ';
+      break;
+    
+    default:
+      break;
+    }
+
+    print_crosshair(ch);
    }
 }

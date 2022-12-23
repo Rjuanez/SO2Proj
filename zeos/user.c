@@ -122,21 +122,24 @@ int __attribute__ ((__section__(".text.main")))
 // }
 
   struct square* sq = (struct square*) get_small();
-  init_square(sq,0,0,2,0x70,1,0);
-  print_square(sq);
-  for( int i=0; i<78; i++){
-  remove_square(sq);
-  move_square();}
-
-  print_square(sq);
-
+  init_square(sq,0,0,2,0x70,1,1);
 
   struct crosshair* ch = (struct crosshair*) get_small();
   init_crosshair(ch);
 
+  for( int i=0; i<100; i++){
+    remove_square(sq);
+    remove_crosshair(ch);
+    crosshair_move_left(ch);
+    print_crosshair(ch);
+    move_square();
+    print_square(sq);
+    }
+
   while(1) {
     get_key(s,0);
     remove_crosshair(ch);
+    //print_square(sq);
     switch (*s)
     {
       case 'w':
@@ -164,5 +167,8 @@ int __attribute__ ((__section__(".text.main")))
     }
 
     print_crosshair(ch);
+
+    // move_square();
+    // remove_square(sq);
    }
 }

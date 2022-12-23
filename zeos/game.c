@@ -42,11 +42,10 @@ void init_square(struct square* sq, int x, int y, int size, char color, int x_di
 void move_square(struct square* sq){
     sq->x += sq->dir_vec[0];
     sq->y += sq->dir_vec[1];
-    if ((sq->x<0 || sq->x+sq->size*2)>=79){
-        sq->dir_vec[0]=-sq->dir_vec[0];
+    if ((sq->x<0) || ((sq->x+sq->size*2)>=79)){
+        sq->dir_vec[0]=-(sq->dir_vec[0]);
         move_square(sq);
-
-    }else if (sq->y<0 || (sq->y+sq->size)>= 24){
+    }else if ((sq->y<0) || ((sq->y+sq->size)>= 25)){
         sq->dir_vec[1]=-sq->dir_vec[1];
         move_square(sq);
     }
